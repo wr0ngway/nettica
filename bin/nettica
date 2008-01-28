@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'ostruct'
+
+require 'rubygems'
+require 'nettica/client'
+
+options = OpenStruct.new
+
+opts = OptionParser.new do |opts|
+  opts.banner = "Usage: nettica -u username -p password -c command"
+  opts.separator "Runs the given nettica service command"
+  opts.separator ""
+  opts.separator "Options:"
+
+  opts.on("-u", "--user USER", "Nettica username to use for authentication") do |val|
+    options.username = val
+  end
+  opts.on("-p", "--password PASSWORD", "Nettica password to use for authentication") do |val|
+    options.password = val
+  end
+  opts.on("-c", "--command COMMAND", [:list_zones, :get_service_info],
+           "Command to execute against nettica service.",
+           "One of list_zones, get_service_info") do |val|
+    options.command = val
+  end
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+end
+
+begin
+  args = opts.parse!(ARGV)
+  raise "Missing required flag" if ! options.username || ! options.password || ! options.command
+rescue Exception => e
+  puts e, "", opts
+  exit
+end
+
+client = Nettica::Client.new(options.username, options.password)
+puts client.send(options.command).inspect

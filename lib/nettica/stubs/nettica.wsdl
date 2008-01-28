@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://www.nettica.com/DNS/DnsApi" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://www.nettica.com/DNS/DnsApi" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.nettica.com/DNS/DnsApi">
+      <s:element name="GetServiceInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetServiceInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetServiceInfoResult" type="tns:ServiceResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ServiceResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Result" type="tns:DnsResult" />
+          <s:element minOccurs="1" maxOccurs="1" name="RemainingCredits" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="TotalCredits" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ServiceRenewalDate" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="DnsResult">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Status" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CreateZone">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DomainName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IpAddress" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateZoneResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateZoneResult" type="tns:DnsResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateSecondaryZone">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DomainName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Master" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="IpAddress" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateSecondaryZoneResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateSecondaryZoneResult" type="tns:DnsResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteZone">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DomainName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteZoneResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DeleteZoneResult" type="tns:DnsResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListZones">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListZonesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListZonesResult" type="tns:ZoneResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ZoneResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Result" type="tns:DnsResult" />
+          <s:element minOccurs="1" maxOccurs="1" name="Count" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Zone" type="tns:ArrayOfString" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ListDomain">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DomainName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListDomainResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListDomainResult" type="tns:DomainResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DomainResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Result" type="tns:DnsResult" />
+          <s:element minOccurs="1" maxOccurs="1" name="Count" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Record" type="tns:ArrayOfDomainRecord" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfDomainRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="DomainRecord" nillable="true" type="tns:DomainRecord" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="DomainRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="DomainName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="HostName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RecordType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Data" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TTL" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Priority" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddRecord">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="d" type="tns:DomainRecord" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddRecordResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddRecordResult" type="tns:DnsResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateRecord">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Old" type="tns:DomainRecord" />
+            <s:element minOccurs="0" maxOccurs="1" name="New" type="tns:DomainRecord" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateRecordResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpdateRecordResult" type="tns:DnsResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteRecord">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="d" type="tns:DomainRecord" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteRecordResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DeleteRecordResult" type="tns:DnsResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ApplyTemplate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DomainName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="GroupName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ApplyTemplateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ApplyTemplateResult" type="tns:DnsResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetServiceInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:GetServiceInfo" />
+  </wsdl:message>
+  <wsdl:message name="GetServiceInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:GetServiceInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateZoneSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateZone" />
+  </wsdl:message>
+  <wsdl:message name="CreateZoneSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateZoneResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateSecondaryZoneSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateSecondaryZone" />
+  </wsdl:message>
+  <wsdl:message name="CreateSecondaryZoneSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateSecondaryZoneResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteZoneSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteZone" />
+  </wsdl:message>
+  <wsdl:message name="DeleteZoneSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteZoneResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListZonesSoapIn">
+    <wsdl:part name="parameters" element="tns:ListZones" />
+  </wsdl:message>
+  <wsdl:message name="ListZonesSoapOut">
+    <wsdl:part name="parameters" element="tns:ListZonesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListDomainSoapIn">
+    <wsdl:part name="parameters" element="tns:ListDomain" />
+  </wsdl:message>
+  <wsdl:message name="ListDomainSoapOut">
+    <wsdl:part name="parameters" element="tns:ListDomainResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddRecordSoapIn">
+    <wsdl:part name="parameters" element="tns:AddRecord" />
+  </wsdl:message>
+  <wsdl:message name="AddRecordSoapOut">
+    <wsdl:part name="parameters" element="tns:AddRecordResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateRecordSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateRecord" />
+  </wsdl:message>
+  <wsdl:message name="UpdateRecordSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateRecordResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteRecordSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteRecord" />
+  </wsdl:message>
+  <wsdl:message name="DeleteRecordSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteRecordResponse" />
+  </wsdl:message>
+  <wsdl:message name="ApplyTemplateSoapIn">
+    <wsdl:part name="parameters" element="tns:ApplyTemplate" />
+  </wsdl:message>
+  <wsdl:message name="ApplyTemplateSoapOut">
+    <wsdl:part name="parameters" element="tns:ApplyTemplateResponse" />
+  </wsdl:message>
+  <wsdl:portType name="DnsApiAsmxSoap">
+    <wsdl:operation name="GetServiceInfo">
+      <wsdl:input message="tns:GetServiceInfoSoapIn" />
+      <wsdl:output message="tns:GetServiceInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateZone">
+      <wsdl:input message="tns:CreateZoneSoapIn" />
+      <wsdl:output message="tns:CreateZoneSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateSecondaryZone">
+      <wsdl:input message="tns:CreateSecondaryZoneSoapIn" />
+      <wsdl:output message="tns:CreateSecondaryZoneSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteZone">
+      <wsdl:input message="tns:DeleteZoneSoapIn" />
+      <wsdl:output message="tns:DeleteZoneSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListZones">
+      <wsdl:input message="tns:ListZonesSoapIn" />
+      <wsdl:output message="tns:ListZonesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListDomain">
+      <wsdl:input message="tns:ListDomainSoapIn" />
+      <wsdl:output message="tns:ListDomainSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddRecord">
+      <wsdl:input message="tns:AddRecordSoapIn" />
+      <wsdl:output message="tns:AddRecordSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateRecord">
+      <wsdl:input message="tns:UpdateRecordSoapIn" />
+      <wsdl:output message="tns:UpdateRecordSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteRecord">
+      <wsdl:input message="tns:DeleteRecordSoapIn" />
+      <wsdl:output message="tns:DeleteRecordSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ApplyTemplate">
+      <wsdl:input message="tns:ApplyTemplateSoapIn" />
+      <wsdl:output message="tns:ApplyTemplateSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DnsApiAsmxSoap" type="tns:DnsApiAsmxSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <wsdl:operation name="GetServiceInfo">
+      <soap:operation soapAction="http://www.nettica.com/DNS/DnsApi/GetServiceInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateZone">
+      <soap:operation soapAction="http://www.nettica.com/DNS/DnsApi/CreateZone" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateSecondaryZone">
+      <soap:operation soapAction="http://www.nettica.com/DNS/DnsApi/CreateSecondaryZone" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteZone">
+      <soap:operation soapAction="http://www.nettica.com/DNS/DnsApi/DeleteZone" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListZones">
+      <soap:operation soapAction="http://www.nettica.com/DNS/DnsApi/ListZones" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDomain">
+      <soap:operation soapAction="http://www.nettica.com/DNS/DnsApi/ListDomain" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddRecord">
+      <soap:operation soapAction="http://www.nettica.com/DNS/DnsApi/AddRecord" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateRecord">
+      <soap:operation soapAction="http://www.nettica.com/DNS/DnsApi/UpdateRecord" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteRecord">
+      <soap:operation soapAction="http://www.nettica.com/DNS/DnsApi/DeleteRecord" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ApplyTemplate">
+      <soap:operation soapAction="http://www.nettica.com/DNS/DnsApi/ApplyTemplate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DnsApiAsmx">
+    <wsdl:port name="DnsApiAsmxSoap" binding="tns:DnsApiAsmxSoap">
+      <soap:address location="https://www.nettica.com/DNS/DnsApi.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

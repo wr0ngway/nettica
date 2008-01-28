@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<loadpath>
+	<pathentry excluding="lib/" path="" type="src"/>
+	<pathentry path="lib" type="src"/>
+	<pathentry path="GEM_LIB/soap4r-1.5.8/lib" type="var"/>
+</loadpath>
