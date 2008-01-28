@@ -1,6 +1,7 @@
 require 'rubygems'
 gem 'soap4r'
 require "nettica/stubs/netticaDriver"
+require 'base64'
 
 # http://dev.ctor.org/soap4r
 # http://markthomas.org/2007/09/12/getting-started-with-soap4r/
@@ -14,7 +15,7 @@ module Nettica
 
     def initialize(username, password)
       @username = username
-      @password = password
+      @password = Base64.encode64(password).strip
       @proxy = DnsApiAsmxSoap.new
     end
 
