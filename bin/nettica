@@ -69,9 +69,7 @@ end
 
 begin
   args = opts.parse!(ARGV)
-  p options
   raise "Missing required flag" if ! options.username || ! options.password || ! options.command
-
 rescue Exception => e
   puts e, "", opts
   exit
