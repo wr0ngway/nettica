@@ -7,12 +7,20 @@ require 'rubygems'
 require 'nettica/client'
 
 options = OpenStruct.new
-options.ttl = 0
-options.priority = 0
+options.ttl = [0]
+options.priority = [0]
 
 opts = OptionParser.new do |opts|
-  opts.banner = "Usage: nettica -u username -p password -c command"
-  opts.separator "Runs the given nettica service command"
+  opts.banner = "Usage: nettica -u username -p password -c command [options]"
+  opts.separator "Runs the given nettica service command, for example:"
+  opts.separator ""
+  opts.separator "  nettica -u my_user -p my_pass -c list_domain -d foo.com"
+  opts.separator "  nettica -u my_user -p my_pass -c add_record -h bar -d foo.com -r A -t 300"
+  opts.separator "          -a 192.168.1.1"
+  opts.separator "  nettica -u my_user -p my_pass -c update_record -h bar -d foo.com"
+  opts.separator "          -a 192.168.1.1,10.0.0.1"
+  opts.separator "  nettica -u my_user -p my_pass -c update_record -h bar -d foo.com -a 10.0.0.1"
+  opts.separator "          -t 60,300"
   opts.separator ""
   opts.separator "Options:"
 
@@ -22,23 +30,23 @@ opts = OptionParser.new do |opts|
   opts.on("-p", "--password PASSWORD", "Nettica password to use for authentication") do |val|
     options.password = val
   end
-  opts.on("-d", "--domain DOMAIN_NAME", "Domain name to apply command to") do |val|
+  opts.on("-d", "--domain DOMAIN_NAME", Array, "Domain name to apply command to") do |val|
     options.domain = val
   end
-  opts.on("-h", "--host HOST_NAME", "Hostname to act upon") do |val|
+  opts.on("-h", "--host HOST_NAME", Array, "Hostname to act upon") do |val|
     options.host = val
   end
   opts.on("-i", "--ip IP", "IP address") do |val|
     options.ip = val
   end
-  opts.on("-r", "--recordtype RECORD_TYPE", "Domain record type (A, CNAME, MX, F, TXT,", "SRV)") do |val|
+  opts.on("-r", "--recordtype RECORD_TYPE", Array, "Domain record type (A, CNAME, MX, F, TXT,", "SRV)") do |val|
     options.recordtype = val
   end
-  opts.on("-t", "--ttl TIME_TO_LIVE", "TTL for domain entries", Integer) do |val|
-    options.ttl = val
+  opts.on("-t", "--ttl TIME_TO_LIVE", Array, "TTL for domain entries") do |val|
+    options.ttl = val.collect {|each| each.to_i}
   end
-  opts.on("-o", "--priority PRIORITY", "Priority for MX/F records", Integer) do |val|
-    options.priority = val
+  opts.on("-o", "--priority PRIORITY", Array, "Priority for MX/F records") do |val|
+    options.priority = val.collect {|each| each.to_i}
   end
   opts.on("-g", "--group GROUP", "Domain group") do |val|
     options.group = val
@@ -46,7 +54,7 @@ opts = OptionParser.new do |opts|
   opts.on("-m", "--master MASTER", "Master domain") do |val|
     options.master = val
   end
-  opts.on("-a", "--data DATA", "IP when creating/deleting records") do |val|
+  opts.on("-a", "--data DATA", Array, "IP when creating/deleting records") do |val|
     options.data = val
   end
 
@@ -83,26 +91,32 @@ case options.command
   when :get_service_info
     result = client.get_service_info()
   when :list_domain
-    result = client.list_domain(options.domain)
+    result = client.list_domain(options.domain.first)
   when :update_record
-    dr = client.create_domain_record(options.domain, options.host, options.recordtype,
-                                     options.data, options.ttl, options.priority)
-    # result = client.update_record(dr, ?)
+    drold = client.create_domain_record(options.domain.first, options.host.first, options.recordtype.first,
+                                     options.data.first, options.ttl.first, options.priority.first)
+    drnew = client.create_domain_record(options.domain[1] || options.domain.first,
+                                        options.host[1] || options.host.first,
+                                        options.recordtype[1] || options.recordtype.first,
+                                        options.data[1] || options.data.first,
+                                        options.ttl[1] || options.ttl.first,
+                                        options.priority[1] || options.priority.first)
+    result = client.update_record(drold, drnew)
   when :delete_record
-    dr = client.create_domain_record(options.domain, options.host, options.recordtype,
-                                     options.data, options.ttl, options.priority)
+    dr = client.create_domain_record(options.domain.first, options.host.first, options.recordtype.first,
+                                     options.data.first, options.ttl.first, options.priority.first)
     result = client.delete_record(dr)
   when :apply_template
-    result = client.apply_template(options.domain, options.group)
+    result = client.apply_template(options.domain.first, options.group)
   when :create_secondary_zone
-    result = client.create_secondary_zone(options.domain, options.master, options.ip)
+    result = client.create_secondary_zone(options.domain.first, options.master, options.ip)
   when :delete_zone
-    result = client.delete_zone(options.domain)
+    result = client.delete_zone(options.domain.first)
   when :create_zone
-    result = client.create_zone(options.domain)
+    result = client.create_zone(options.domain.first)
   when :add_record
-    dr = client.create_domain_record(options.domain, options.host, options.recordtype,
-                                     options.data, options.ttl, options.priority)
+    dr = client.create_domain_record(options.domain.first, options.host.first, options.recordtype.first,
+                                     options.data.first, options.ttl.first, options.priority.first)
     result = client.add_record(dr)
 end
 
