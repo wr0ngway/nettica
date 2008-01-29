@@ -7,6 +7,8 @@ require 'rubygems'
 require 'nettica/client'
 
 options = OpenStruct.new
+options.ttl = 0
+options.priority = 0
 
 opts = OptionParser.new do |opts|
   opts.banner = "Usage: nettica -u username -p password -c command"
@@ -20,13 +22,46 @@ opts = OptionParser.new do |opts|
   opts.on("-p", "--password PASSWORD", "Nettica password to use for authentication") do |val|
     options.password = val
   end
-  opts.on("-c", "--command COMMAND", [:list_zones, :get_service_info],
+  opts.on("-d", "--domain DOMAIN_NAME", "Domain name to apply command to") do |val|
+    options.domain = val
+  end
+  opts.on("-h", "--host HOST_NAME", "Hostname to act upon") do |val|
+    options.host = val
+  end
+  opts.on("-i", "--ip IP", "IP address") do |val|
+    options.ip = val
+  end
+  opts.on("-r", "--recordtype RECORD_TYPE", "Domain record type (A, CNAME, MX, F, TXT,", "SRV)") do |val|
+    options.recordtype = val
+  end
+  opts.on("-t", "--ttl TIME_TO_LIVE", "TTL for domain entries", Integer) do |val|
+    options.ttl = val
+  end
+  opts.on("-o", "--priority PRIORITY", "Priority for MX/F records", Integer) do |val|
+    options.priority = val
+  end
+  opts.on("-g", "--group GROUP", "Domain group") do |val|
+    options.group = val
+  end
+  opts.on("-m", "--master MASTER", "Master domain") do |val|
+    options.master = val
+  end
+  opts.on("-a", "--data DATA", "IP when creating/deleting records") do |val|
+    options.data = val
+  end
+
+  opts.on("-c", "--command COMMAND",
+           [:list_zones, :get_service_info, :update_record, :delete_record, :apply_template,
+            :list_domain, :create_secondary_zone, :delete_zone, :create_zone, :add_record],
            "Command to execute against nettica service.",
-           "One of list_zones, get_service_info") do |val|
+           "One of list_zones, get_service_info,",
+           "list_domain, update_record, delete_record,",
+           "apply_template, create_secondary_zone,",
+           "delete_zone, create_zone, add_record") do |val|
     options.command = val
   end
 
-  opts.on_tail("-h", "--help", "Show this message") do
+  opts.on_tail("--help", "Show this message") do
     puts opts
     exit
   end
@@ -34,11 +69,43 @@ end
 
 begin
   args = opts.parse!(ARGV)
+  p options
   raise "Missing required flag" if ! options.username || ! options.password || ! options.command
+
 rescue Exception => e
   puts e, "", opts
   exit
 end
 
+result = nil
 client = Nettica::Client.new(options.username, options.password)
-puts client.send(options.command).inspect
+case options.command
+  when :list_zones
+    result = client.list_zones()
+  when :get_service_info
+    result = client.get_service_info()
+  when :list_domain
+    result = client.list_domain(options.domain)
+  when :update_record
+    dr = client.create_domain_record(options.domain, options.host, options.recordtype,
+                                     options.data, options.ttl, options.priority)
+    # result = client.update_record(dr, ?)
+  when :delete_record
+    dr = client.create_domain_record(options.domain, options.host, options.recordtype,
+                                     options.data, options.ttl, options.priority)
+    result = client.delete_record(dr)
+  when :apply_template
+    result = client.apply_template(options.domain, options.group)
+  when :create_secondary_zone
+    result = client.create_secondary_zone(options.domain, options.master, options.ip)
+  when :delete_zone
+    result = client.delete_zone(options.domain)
+  when :create_zone
+    result = client.create_zone(options.domain)
+  when :add_record
+    dr = client.create_domain_record(options.domain, options.host, options.recordtype,
+                                     options.data, options.ttl, options.priority)
+    result = client.add_record(dr)
+end
+
+puts result.inspect

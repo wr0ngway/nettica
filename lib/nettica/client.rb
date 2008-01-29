@@ -26,8 +26,33 @@ module Nettica
     #   data - SOAP::SOAPString
     #   ttl - SOAP::SOAPInt
     #   priority - SOAP::SOAPInt
-    def self.create_domain_record(domainName = nil, hostName = nil, recordType = nil, data = nil, ttl = nil, priority = nil)
+    def create_domain_record(domainName = nil, hostName = nil, recordType = nil, data = nil, ttl = 0, priority = 0)
+      valid_ttls = [0, 1, 60, 300, 600, 900, 1800, 2700, 3600, 7200, 14400, 28800, 43200, 64800, 86400, 172800]
+      raise "Ttl must be one of #{valid_ttls.join(',')}" if ttl && ! valid_ttls.include?(ttl)
+
+      mx_prio = [5, 10, 20, 30, 40, 50, 60, 70, 80, 90]
+      f_prio = [1, 2, 3]
+      raise "MX priority must be one of #{mx_prio.join(',')}" if recordType == "MX" and ! mx_prio.include?(priority)
+      raise "F priority must be one of #{f_prio.join(',')}" if recordType == "F" and ! f_prio.include?(priority)
+
+      valid_types = ["A", "CNAME", "MX", "F", "TXT", "SRV"]
+      raise "Record type must be one of #{valid_types.join(',')}" if recordType && ! valid_types.include?(recordType)
+
       DomainRecord.new(domainName, hostName, recordType, data, ttl, priority)
+    end
+
+    def decode_status(result)
+      case result.result.status
+        when 200: "Success"
+        when 401: "Access Denied"
+        when 404: "Not Found"
+        when 430: "Domain Exists"
+        when 431: "Record already exists"
+        when 432: "Invalid record type.  Must be A, CNAME, MX, F, TXT, SRV"
+        when 450: "No Service"
+        when 451: "No credits"
+        when 460: "Your service has expired"
+      end
     end
 
     def update_record(old_domain_record, new_domain_record)
@@ -62,8 +87,8 @@ module Nettica
       @proxy.deleteZone(DeleteZone.new(@username, @password, domainName)).deleteZoneResult
     end
 
-    def create_zone(domainName, ipAddress)
-      @proxy.createZone(CreateZone.new(@username, @password, domainName, ipAddress)).createZoneResult
+    def create_zone(domainName)
+      @proxy.createZone(CreateZone.new(@username, @password, domainName, "")).createZoneResult
     end
 
     def add_record(domain_record)
