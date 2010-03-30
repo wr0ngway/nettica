@@ -17,7 +17,8 @@ Gem::Specification.new do |s|
     "README.rdoc"
   ]
   s.files = [
-    "README.rdoc",
+    "CHANGELOG",
+     "README.rdoc",
      "VERSION",
      "bin/nettica",
      "doc/Nettica Bulk API Specification.doc",
