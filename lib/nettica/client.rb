@@ -1,5 +1,5 @@
 require 'rubygems'
-gem 'soap4r'
+gem 'mumboe-soap4r'
 require "nettica/stubs/netticaDriver"
 require 'base64'
 
@@ -43,15 +43,15 @@ module Nettica
 
     def decode_status(result)
       case result.result.status
-        when 200: "Success"
-        when 401: "Access Denied"
-        when 404: "Not Found"
-        when 430: "Domain Exists"
-        when 431: "Record already exists"
-        when 432: "Invalid record type.  Must be A, CNAME, MX, F, TXT, SRV"
-        when 450: "No Service"
-        when 451: "No credits"
-        when 460: "Your service has expired"
+        when 200 then "Success"
+        when 401 then "Access Denied"
+        when 404 then "Not Found"
+        when 430 then "Domain Exists"
+        when 431 then "Record already exists"
+        when 432 then "Invalid record type.  Must be A, CNAME, MX, F, TXT, SRV"
+        when 450 then "No Service"
+        when 451 then "No credits"
+        when 460 then "Your service has expired"
       end
     end
 
