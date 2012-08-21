@@ -13,7 +13,7 @@ A ruby client for managing nettica bulk-dns entries using the Nettica SOAP API
 == SYNOPSIS:
 
   require 'nettica/client'
-  client = Neticca::Client.new('joe_user', 'secret_password')
+  client = Nettica::Client.new('joe_user', 'secret_password')
   puts client.list_zones
 
   or use the command line binary, "nettica"
